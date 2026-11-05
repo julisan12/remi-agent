@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remi — Tu Academia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/global.css">
+<script src="/remi-web.js"></script>
+<style>
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #f0f4ff;
+  position: relative;
+}
+
+/* ─── BACKGROUND ─── */
+.bg-mesh {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 90% 70% at 15% -5%, rgba(2,0,138,0.09) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 60% at 85% 105%, rgba(253,212,0,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(2,0,138,0.04) 0%, transparent 70%),
+    #f0f4ff;
+}
+.bg-dots {
+  position: fixed; inset: 0; z-index: 0;
+  background-image: radial-gradient(circle, rgba(2,0,138,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ─── CARD ─── */
+.login-card {
+  position: relative; z-index: 10;
+  width: 440px; max-width: 95vw;
+  background: rgba(255,255,255,0.80);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 24px;
+  padding: 40px 36px;
+  box-shadow:
+    0 32px 64px rgba(2,0,138,0.12),
+    0 8px 24px rgba(2,0,138,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  animation: card-in .45s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes card-in {
+  from { opacity:0; transform:translateY(24px) scale(0.96) }
+  to   { opacity:1; transform:translateY(0) scale(1) }
+}
+
+/* ─── LOGO ─── */
+.logo {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 32px;
+}
+.logo-bear {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, #02008a 0%, #0500ca 100%);
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  box-shadow: 0 6px 20px rgba(2,0,138,0.30), inset 0 1px 0 rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+.logo-text-wrap { display: flex; flex-direction: column; gap: 2px; }
+.logo-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px; font-weight: 700;
+  color: #02008a; letter-spacing: -0.5px;
+  line-height: 1;
+}
+.logo-name em { color: #fdd400; font-style: normal; }
+.logo-tagline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px; color: #94a3b8;
+  letter-spacing: 0.10em; text-transform: uppercase;
+}
+
+/* ─── SEPARATOR ─── */
+.sep {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(2,0,138,0.10), transparent);
+  margin-bottom: 28px;
+}
+
+/* ─── MODE TABS ─── */
+.mode-tabs {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-bottom: 28px;
+}
+.mode-tab {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 16px 12px; border-radius: 14px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8faff; cursor: pointer;
+  transition: all .2s; text-align: center;
+  position: relative; overflow: hidden;
+}
+.mode-tab::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(2,0,138,0.04), transparent);
+  opacity: 0; transition: opacity .2s;
+}
+.mode-tab:hover { border-color: #cbd5e1; background: #f0f4ff; }
+.mode-tab:hover::before { opacity: 1; }
+.mode-tab.active {
+  background: linear-gradient(135deg, rgba(253,212,0,0.20) 0%, rgba(253,212,0,0.08) 100%);
+  border-color: #fdd400;
+  box-shadow: 0 2px 12px rgba(253,212,0,0.25);
+}
+.mode-tab.active .tab-label { color: #0500ca; }
+.mode-tab.active .tab-sub { color: #02008a; opacity: 0.65; }
+.tab-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; box-shadow: 0 2px 8px rgba(2,0,138,0.10);
+  transition: transform .2s;
+}
+.mode-tab.active .tab-icon {
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 3px 12px rgba(253,212,0,0.20);
+}
+.mode-tab:hover .tab-icon { transform: translateY(-2px); }
+.tab-label {
+  font-size: 12px; font-weight: 700; color: #1a1a2e;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.tab-sub {
+  font-size: 10px; color: #94a3b8;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ─── FIELDS ─── */
+.fields-section { animation: fields-in .2s ease; }
+@keyframes fields-in {
+  from { opacity:0; transform:translateY(8px) }
+  to   { opacity:1; transform:translateY(0) }
+}
+.field-group { margin-bottom: 16px; }
+.field-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px; color: #64748b;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  margin-bottom: 7px; display: block; font-weight: 700;
+}
+
+/* Override global inputs for login card */
+.login-card input[type="password"],
+.login-card select {
+  background: rgba(255,255,255,0.85);
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-size: 13px;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.login-card input[type="password"]:focus,
+.login-card select:focus {
+  border-color: #02008a;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(2,0,138,0.10);
+}
+
+/* ─── ACTION BUTTON ─── */
+.login-btn {
+  width: 100%; padding: 14px;
+  border-radius: 14px;
+  font-size: 14px; font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  cursor: pointer; border: none;
+  transition: all .2s;
+  letter-spacing: 0.02em;
+  margin-top: 22px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  position: relative; overflow: hidden;
+}
+.login-btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  pointer-events: none;
+}
+.login-btn.admin-mode-btn {
+  background: #fdd400;
+  color: #0500ca;
+  box-shadow: 0 4px 18px rgba(253,212,0,0.35);
+}
+.login-btn.admin-mode-btn:hover {
+  background: #f5c800;
+  box-shadow: 0 6px 24px rgba(253,212,0,0.45);
+  transform: translateY(-1px);
+}
+.login-btn.user-mode-btn {
+  background: linear-gradient(135deg, #02008a 0%, #0500ca 100%);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(2,0,138,0.30);
+}
+.login-btn.user-mode-btn:hover {
+  box-shadow: 0 6px 28px rgba(2,0,138,0.40);
+  transform: translateY(-1px);
+}
+.login-btn:active { transform: translateY(0) !important; }
+.login-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+/* ─── ERROR ─── */
+.error-msg {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: 10px; padding: 10px 14px;
+  font-size: 12px; color: #ef4444;
+  margin-top: 14px; display: none;
+  font-family: 'Space Grotesk', sans-serif;
+  align-items: center; gap: 8px;
+}
+.error-msg.visible { display: flex; animation: fields-in .2s ease; }
+
+/* ─── FOOTER ─── */
+.login-footer {
+  margin-top: 28px; text-align: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px; color: #94a3b8;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.login-footer::before, .login-footer::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(2,0,138,0.08), transparent);
+}
+
+/* ─── SELECT CUSTOM ─── */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  padding-right: 36px !important;
+}
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+<div class="bg-dots"></div>
+
+<div class="login-card">
+  <!-- Logo -->
+  <div class="logo">
+    <div class="logo-bear">🐻‍❄️</div>
+    <div class="logo-text-wrap">
+      <div class="logo-name">Re<em>mi</em></div>
+      <div class="logo-tagline">Tu Academia · Panel de Control</div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- Selector de modo -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="mode-admin" onclick="selectMode('admin')">
+      <div class="tab-icon">🛡️</div>
+      <span class="tab-label">Admin</span>
+      <span class="tab-sub">Control total</span>
+    </button>
+    <button class="mode-tab" id="mode-user" onclick="selectMode('user')">
+      <div class="tab-icon">👤</div>
+      <span class="tab-label">Usuario</span>
+      <span class="tab-sub">Acceso restringido</span>
+    </button>
+  </div>
+
+  <!-- Campos Admin -->
+  <div class="fields-section" id="fields-admin">
+    <div class="field-group">
+      <label class="field-label">Cuenta admin</label>
+      <select id="admin-select">
+        <option value="">Cargando...</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Contraseña</label>
+      <input type="password" id="admin-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+  </div>
+
+  <!-- Campos Usuario -->
+  <div class="fields-section" id="fields-user" style="display:none">
+    <div class="field-group">
+      <label class="field-label">Seleccionar usuario</label>
+      <select id="user-select">
+        <option value="">Cargando...</option>
+      </select>
+    </div>
+    <div class="field-group" id="pin-group" style="display:none">
+      <label class="field-label">PIN (si tienes uno)</label>
+      <input type="password" id="user-pin" placeholder="••••" maxlength="8" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+  </div>
+
+  <div class="error-msg" id="error-msg">
+    <span class="material-symbols-outlined icon-sm">error</span>
+    <span id="error-text"></span>
+  </div>
+
+  <button class="login-btn admin-mode-btn" id="login-btn" onclick="doLogin()">
+    <span class="material-symbols-outlined icon-sm">shield</span>
+    Entrar como Admin
+  </button>
+
+  <div class="login-footer">v1.0.0 · Tu Academia</div>
+</div>
+
+<script>
+let currentMode = 'admin';
+
+async function init() {
+  // Cargar usuarios regulares
+  const users = await window.remi.auth.getUsers();
+  const sel = document.getElementById('user-select');
+  sel.innerHTML = users.length
+    ? users.map(u => `<option value="${u.id}">${u.name}</option>`).join('')
+    : '<option value="">No hay usuarios configurados</option>';
+
+  // Cargar cuentas admin
+  const admins = await fetch('/api/web/admins').then(r => r.json()).catch(() => []);
+  const adminSel = document.getElementById('admin-select');
+  adminSel.innerHTML = admins.length
+    ? admins.map(a => `<option value="${a.id}">${a.name}</option>`).join('')
+    : '<option value="">No hay cuentas admin</option>';
+
+  document.getElementById('admin-password').focus();
+}
+
+function selectMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-admin').classList.toggle('active', mode === 'admin');
+  document.getElementById('mode-user').classList.toggle('active', mode === 'user');
+  document.getElementById('fields-admin').style.display = mode === 'admin' ? 'block' : 'none';
+  document.getElementById('fields-user').style.display = mode === 'user' ? 'block' : 'none';
+
+  const btn = document.getElementById('login-btn');
+  if (mode === 'admin') {
+    btn.className = 'login-btn admin-mode-btn';
+    btn.innerHTML = '<span class="material-symbols-outlined icon-sm">shield</span> Entrar como Admin';
+    setTimeout(() => document.getElementById('admin-password').focus(), 50);
+  } else {
+    btn.className = 'login-btn user-mode-btn';
+    btn.innerHTML = '<span class="material-symbols-outlined icon-sm">login</span> Entrar';
+    document.getElementById('pin-group').style.display = 'block';
+  }
+  hideError();
+}
+
+async function doLogin() {
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined icon-sm">hourglass_empty</span> Verificando...';
+  hideError();
+
+  let result;
+  if (currentMode === 'admin') {
+    const userId   = document.getElementById('admin-select').value;
+    const password = document.getElementById('admin-password').value;
+    result = await window.remi.auth.login({ role: 'admin', userId, password });
+  } else {
+    const userId = document.getElementById('user-select').value;
+    const pin = document.getElementById('user-pin').value;
+    result = await window.remi.auth.login({ role: 'user', userId, password: pin });
+  }
+
+  if (!result.ok) {
+    showError(result.error);
+    btn.disabled = false;
+    if (currentMode === 'admin') {
+      btn.innerHTML = '<span class="material-symbols-outlined icon-sm">shield</span> Entrar como Admin';
+    } else {
+      btn.innerHTML = '<span class="material-symbols-outlined icon-sm">login</span> Entrar';
+    }
+  }
+  // On success, main process navigates to the appropriate page
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  const txt = document.getElementById('error-text');
+  txt.textContent = msg;
+  el.classList.add('visible');
+}
+
+function hideError() {
+  document.getElementById('error-msg').classList.remove('visible');
+}
+
+init();
+</script>
+</body>
+</html>

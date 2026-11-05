@@ -1,0 +1,35 @@
+{
+  "_comentario": "asesor edita solo los campos 'mensaje'. No tocar pipelineId ni stageId.",
+  "etapas": [
+    {
+      "pipelineId": "TU_PIPELINE_ID",
+      "stageId": "TU_STAGE_ID",
+      "stageName": "Lead Interesado — 16/03/26",
+      "mensaje": "Hola {{nombre}} 👋 Soy {{asesor}} de {{empresa}}. Vi que te interesaste en nuestro programa. ¿Tienes unos minutos para que te cuente cómo funciona y resolvamos tus dudas?"
+    },
+    {
+      "pipelineId": "TU_PIPELINE_ID",
+      "stageId": "TU_STAGE_ID",
+      "stageName": "Datos Enviados — 16/03/26",
+      "mensaje": "Hola {{nombre}} 👋 Te enviamos la información de Tu Academia. ¿Pudiste revisarla? Estoy aquí para aclarar cualquier duda antes de que tomes tu decisión."
+    },
+    {
+      "pipelineId": "TU_PIPELINE_ID",
+      "stageId": "TU_STAGE_ID",
+      "stageName": "En Seguimiento — 16/03/26",
+      "mensaje": "Hola {{nombre}}, ¿cómo estás? Solo quería retomar nuestra conversación sobre Tu Academia 🙌 ¿Hay algo que te impida avanzar o alguna duda que pueda resolver?"
+    },
+    {
+      "pipelineId": "TU_PIPELINE_ID",
+      "stageId": "TU_STAGE_ID",
+      "stageName": "Quiero Aclarar Dudas — Seguimiento Lanzamiento",
+      "mensaje": "Hola {{nombre}} 👋 Vi que tienes dudas sobre el programa. Cuéntame, ¿qué necesitas saber? Con gusto te ayudo a tomar la mejor decisión."
+    },
+    {
+      "pipelineId": "TU_PIPELINE_ID",
+      "stageId": "TU_STAGE_ID",
+      "stageName": "Hablar con un Asesor — Seguimiento Lanzamiento",
+      "mensaje": "Hola {{nombre}} 🙋 Soy asesor, asesora de Tu Academia. ¿Cuándo tienes 10 minutos para hablar? Quiero entender qué buscas y ver si podemos ayudarte."
+    }
+  ]
+}

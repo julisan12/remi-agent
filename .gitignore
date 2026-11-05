@@ -1,0 +1,35 @@
+node_modules/
+config/.env
+.env
+memory/wa_session/
+memory/state.json
+*.log
+.DS_Store
+config/google_credentials.json
+config/google_token.pickle
+*.pickle
+wa_sessions/
+
+# Sensibles — no subir a GitHub
+.mcp.json
+browser_session/
+.claude/
+!.claude/skills/
+mcp_log.txt
+memory/*
+!memory/users.json
+!memory/agents.json
+!memory/tools.json
+!memory/scheduled-tasks.json
+reportes/
+scripts/
+!scripts/setup-python.js
+*.png
+*.docx
+# *.py excluido globalmente — excepto los scripts de voice/
+*.py
+!voice/*.py
+voice/ssl/
+.env.sia
+__pycache__/
+*.pyc

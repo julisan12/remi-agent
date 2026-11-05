@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remi — Tu Academia</title>
+<link rel="stylesheet" href="styles/global.css">
+<script src="/remi-web.js"></script>
+<style>
+/* ─── LAYOUT ─── */
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 210px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  flex-shrink: 0;
+  box-shadow: 2px 0 12px rgba(2,0,138,0.04);
+}
+.sidebar-logo {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 14px 14px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-d) 100%);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(2,0,138,0.25);
+  flex-shrink: 0;
+}
+.logo-text { font-size: 17px; font-weight: 900; color: var(--text); letter-spacing: -0.5px; font-family: 'Space Grotesk', sans-serif; }
+.logo-text span { color: var(--primary); }
+.logo-ver { font-family: 'Space Grotesk', sans-serif; font-size: 9px; color: var(--text3); letter-spacing: 0.04em; text-transform: uppercase; margin-top: 1px; }
+
+.nav-section { padding: 0 8px; }
+.nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: var(--rsm);
+  cursor: pointer; color: var(--text2); font-size: 13px; font-weight: 500;
+  transition: all .15s; margin-bottom: 2px; user-select: none;
+  border: 1px solid transparent;
+}
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active {
+  background: var(--primary-light); color: var(--primary);
+  border-color: var(--primary-light2); font-weight: 600;
+}
+.nav-icon { width: 18px; text-align: center; font-size: 15px; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent); color: var(--primary);
+  font-size: 9px; font-weight: 700; padding: 1px 5px;
+  border-radius: 10px; font-family: 'Space Grotesk', sans-serif;
+}
+
+.agent-pill {
+  margin: 0 8px 10px;
+  padding: 10px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+.agent-pill-name {
+  font-size: 12px; font-weight: 700; color: var(--text);
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.agent-pill-sub { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+.sidebar-bottom { margin-top: auto; padding: 10px 8px; border-top: 1px solid var(--border); }
+.user-card {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: var(--rsm);
+  background: var(--surface2); border: 1px solid var(--border);
+  cursor: pointer; transition: border-color .2s;
+}
+.user-card:hover { border-color: var(--border2); }
+.user-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-d) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: white; flex-shrink: 0;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.user-name { font-size: 12px; font-weight: 700; color: var(--text); font-family: 'Space Grotesk', sans-serif; }
+.user-role { font-size: 10px; color: var(--text3); margin-top: 1px; text-transform: uppercase; letter-spacing: 0.04em; }
+.logout-btn { margin-left: auto; font-size: 14px; color: var(--text3); cursor: pointer; transition: color .15s; }
+.logout-btn:hover { color: var(--red); }
+
+/* ─── MAIN ─── */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: var(--bg); }
+.topbar {
+  display: flex; align-items: center; gap: 12px; padding: 11px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  flex-shrink: 0;
+  box-shadow: 0 1px 0 var(--border);
+}
+.topbar-title {
+  font-size: 14px; font-weight: 700; flex: 1; color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+}
+.topbar-title span { color: var(--text3); font-weight: 400; font-size: 11px; margin-left: 8px; }
+.status-pill {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--green-bg); border: 1px solid var(--green-border);
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 10px; font-family: 'Space Grotesk', sans-serif;
+  color: var(--green); font-weight: 600; letter-spacing: 0.03em;
+}
+
+.view { display: none; flex: 1; min-height: 0; }
+.view.active { display: flex; flex-direction: column; animation: fadein .2s ease; }
+@keyframes fadein { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+.hidden { display: none !important; }
+
+/* ─── CHAT ─── */
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 24px 20px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.msg { display: flex; gap: 10px; max-width: 82%; animation: fadein .2s ease; }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.msg.assistant { align-self: flex-start; }
+
+.msg-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.msg.assistant .msg-avatar {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-d) 100%);
+  border: 1px solid var(--primary-light2);
+}
+.msg.user .msg-avatar {
+  background: linear-gradient(135deg, var(--surface3) 0%, var(--surface2) 100%);
+  border: 1px solid var(--border);
+  font-size: 12px; font-weight: 800; color: var(--primary);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.msg-bubble {
+  padding: 10px 14px; border-radius: 14px;
+  font-size: 13px; line-height: 1.6; color: var(--text);
+}
+.msg.assistant .msg-bubble {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px 14px 14px 14px;
+  box-shadow: var(--shadow-sm);
+}
+.msg.user .msg-bubble {
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 14px 4px 14px 14px;
+  color: #ffffff;
+}
+.msg.user .msg-bubble strong { color: #ffffff; }
+.msg-time { font-size: 10px; color: var(--text3); margin-top: 4px; }
+
+/* Typing indicator */
+.typing-dots { display: flex; gap: 4px; padding: 4px 2px; }
+.typing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); opacity: 0.5; animation: typing-bounce 1.2s infinite; }
+.typing-dot:nth-child(2) { animation-delay: .2s; }
+.typing-dot:nth-child(3) { animation-delay: .4s; }
+@keyframes typing-bounce { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-6px);opacity:1} }
+
+/* Welcome screen */
+.chat-welcome {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; padding: 40px;
+  background: var(--bg);
+}
+.welcome-icon { font-size: 52px; animation: bear-breathe 3s ease-in-out infinite; }
+@keyframes bear-breathe { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.welcome-title {
+  font-size: 24px; font-weight: 800; text-align: center;
+  font-family: 'Space Grotesk', sans-serif; color: var(--text);
+}
+.welcome-title span { color: var(--primary); }
+.welcome-sub { font-size: 13px; color: var(--text2); text-align: center; max-width: 360px; line-height: 1.6; }
+.quick-prompts { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 480px; margin-top: 4px; }
+.quick-prompt {
+  padding: 8px 16px; border-radius: 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 12px; color: var(--text2); cursor: pointer;
+  transition: all .2s; box-shadow: var(--shadow-sm);
+}
+.quick-prompt:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary-light2); }
+
+/* Input area */
+.chat-input-area {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+.chat-input-wrap {
+  display: flex; gap: 10px; align-items: flex-end;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 10px 14px;
+  transition: border-color .2s, box-shadow .2s;
+  box-shadow: var(--shadow-sm);
+}
+.chat-input-wrap:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+.chat-textarea {
+  flex: 1; resize: none; border: none; background: transparent;
+  color: var(--text); font-family: 'Manrope', sans-serif; font-size: 13px;
+  line-height: 1.5; max-height: 120px; outline: none;
+  scrollbar-width: thin;
+}
+.chat-textarea::placeholder { color: var(--text3); }
+.send-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--primary);
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0; transition: all .2s;
+  box-shadow: 0 2px 8px rgba(2,0,138,0.3); color: white;
+}
+.send-btn:hover { background: var(--primary-d); transform: scale(1.06); box-shadow: 0 4px 14px rgba(2,0,138,0.4); }
+.send-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+.chat-hint { font-size: 10px; color: var(--text3); margin-top: 6px; text-align: center; font-family: 'Space Grotesk', sans-serif; }
+
+/* ─── TOOLS VIEW ─── */
+.tools-content { flex: 1; overflow-y: auto; padding: 24px; }
+.tool-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 16px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 14px;
+  transition: border-color .2s, box-shadow .2s;
+  box-shadow: var(--shadow-sm);
+}
+.tool-card:hover { border-color: var(--border2); box-shadow: var(--shadow); }
+.tool-card.disabled { opacity: 0.45; }
+.tool-icon { font-size: 20px; flex-shrink: 0; }
+.tool-info { flex: 1; }
+.tool-name { font-size: 12px; font-weight: 700; color: var(--text); font-family: 'Space Grotesk', sans-serif; letter-spacing: 0.03em; }
+.tool-desc { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.tool-run-btn {
+  padding: 6px 14px; border-radius: 20px;
+  background: var(--primary-light); border: 1px solid var(--primary-light2);
+  color: var(--primary); font-size: 11px; font-weight: 600;
+  cursor: pointer; transition: all .15s;
+}
+.tool-run-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+/* Tool runner modal */
+.tool-params { margin: 12px 0; }
+.tool-params .form-group { margin-bottom: 10px; }
+
+/* ─── REQUEST VIEW ─── */
+.request-content { flex: 1; overflow-y: auto; padding: 24px; }
+.request-form { max-width: 500px; }
+.request-form h2 { font-size: 18px; font-weight: 800; margin-bottom: 6px; font-family: 'Space Grotesk', sans-serif; }
+.request-form p { font-size: 12px; color: var(--text2); margin-bottom: 20px; line-height: 1.6; }
+
+/* ─── NOTIFICATION BELL ─── */
+.notif-wrap { position: relative; flex-shrink: 0; }
+.notif-bell {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px; transition: all .15s; position: relative;
+}
+.notif-bell:hover { background: var(--surface3); border-color: var(--border2); }
+.notif-count {
+  position: absolute; top: -4px; right: -4px;
+  min-width: 15px; height: 15px; border-radius: 8px;
+  background: var(--red); color: white; font-size: 9px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; padding: 0 2px;
+  font-family: 'Space Grotesk', sans-serif; pointer-events: none;
+}
+.notif-panel {
+  position: fixed; right: 14px; top: 52px; z-index: 300;
+  width: 300px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--r);
+  box-shadow: var(--shadow-lg); overflow: hidden;
+  animation: fadein .15s ease;
+}
+.notif-panel-header {
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.notif-panel-title { font-size: 12px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+.notif-mark-read {
+  font-size: 10px; color: var(--primary); cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif; background: none; border: none; padding: 0; font-weight: 600;
+}
+.notif-mark-read:hover { text-decoration: underline; }
+.notif-list { max-height: 280px; overflow-y: auto; }
+.notif-item {
+  padding: 9px 14px; border-bottom: 1px solid var(--border); transition: background .15s;
+}
+.notif-item:hover { background: var(--surface2); }
+.notif-item.unread { border-left: 3px solid var(--primary); padding-left: 11px; background: var(--primary-light); }
+.notif-item-msg { font-size: 12px; color: var(--text); line-height: 1.4; }
+.notif-item-time { font-size: 10px; color: var(--text3); margin-top: 3px; }
+.notif-empty-msg { padding: 18px; text-align: center; font-size: 12px; color: var(--text3); }
+
+/* ─── TASKS VIEW ─── */
+.tasks-wrap { flex: 1; overflow-y: auto; padding: 24px; }
+.tasks-container { max-width: 600px; padding-bottom: 40px; }
+.tasks-header { margin-bottom: 18px; }
+.tasks-header h2 { font-size: 18px; font-weight: 800; margin: 0 0 4px; font-family: 'Space Grotesk', sans-serif; }
+.task-date-label { font-family: 'Space Grotesk', sans-serif; font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.task-input-row { display: flex; gap: 8px; margin-bottom: 22px; }
+.task-input-row input {
+  flex: 1;
+}
+.add-task-btn {
+  padding: 9px 16px; border-radius: var(--rsm);
+  background: var(--primary);
+  color: white; font-size: 13px; font-weight: 700;
+  border: none; cursor: pointer; transition: all .2s; white-space: nowrap;
+}
+.add-task-btn:hover { background: var(--primary-d); transform: translateY(-1px); box-shadow: var(--shadow); }
+.task-section-label {
+  font-family: 'Space Grotesk', sans-serif; font-size: 10px; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; font-weight: 600;
+}
+.task-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--r);
+  background: var(--surface); border: 1px solid var(--border);
+  margin-bottom: 6px; transition: all .15s; box-shadow: var(--shadow-sm);
+}
+.task-card:hover { border-color: var(--border2); box-shadow: var(--shadow); }
+.task-card.done { opacity: 0.5; }
+.task-check {
+  width: 19px; height: 19px; border-radius: 50%;
+  border: 2px solid var(--border2); cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s; font-size: 10px; color: var(--green);
+}
+.task-check:hover { border-color: var(--primary); background: var(--primary-light); }
+.task-card.done .task-check { border-color: var(--green); background: var(--green-bg); }
+.task-text { flex: 1; font-size: 13px; color: var(--text); }
+.task-card.done .task-text { text-decoration: line-through; color: var(--text3); }
+.task-carry { font-size: 10px; color: var(--amber); font-family: 'Space Grotesk', sans-serif; background: var(--amber-bg); padding: 1px 6px; border-radius: 10px; border: 1px solid var(--amber-border); flex-shrink: 0; font-weight: 600; }
+.task-del { font-size: 13px; color: var(--text3); cursor: pointer; transition: color .15s; background: none; border: none; padding: 2px 3px; flex-shrink: 0; }
+.task-del:hover { color: var(--red); }
+.tasks-empty { text-align: center; padding: 28px 0; color: var(--text3); font-size: 13px; }
+.tasks-empty .ei { font-size: 28px; margin-bottom: 8px; }
+
+/* ─── MARKDOWN IN CHAT ─── */
+.msg.assistant .msg-bubble code {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--surface2); padding: 1px 5px; border-radius: 4px;
+  font-size: 11px; color: var(--primary);
+  border: 1px solid var(--border);
+}
+.msg.assistant .msg-bubble strong { color: var(--text); font-weight: 700; }
+.msg.assistant .msg-bubble em { color: var(--text2); }
+.msg.assistant .msg-bubble ul, .msg.assistant .msg-bubble ol { padding-left: 18px; margin: 6px 0; }
+.msg.assistant .msg-bubble li { margin-bottom: 3px; }
+.msg.assistant .msg-bubble p { margin-bottom: 6px; }
+.msg.assistant .msg-bubble p:last-child { margin-bottom: 0; }
+.msg.user .msg-bubble a { color: rgba(255,255,255,0.85); }
+
+/* ─── INTEGRACIONES ─── */
+.integ-wrap { flex: 1; overflow-y: auto; padding: 24px; }
+.integ-container { max-width: 600px; padding-bottom: 40px; }
+.integ-header { margin-bottom: 24px; }
+.integ-header h2 { font-size: 18px; font-weight: 800; margin: 0 0 4px; font-family: 'Space Grotesk', sans-serif; }
+.integ-header p { font-size: 12px; color: var(--text3); margin: 0; }
+.integ-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px; margin-bottom: 10px;
+  transition: border-color .2s, box-shadow .2s; box-shadow: var(--shadow-sm);
+}
+.integ-card:hover { border-color: var(--border2); box-shadow: var(--shadow); }
+.integ-card.connected { border-color: var(--green-border); background: rgba(16,185,129,0.02); }
+.integ-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.integ-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
+.integ-info { flex: 1; }
+.integ-name { font-size: 13px; font-weight: 700; color: var(--text); font-family: 'Space Grotesk', sans-serif; }
+.integ-desc { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.integ-status-badge {
+  font-size: 10px; font-family: 'Space Grotesk', sans-serif;
+  padding: 3px 8px; border-radius: 10px; font-weight: 600;
+}
+.integ-status-badge.on { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.integ-status-badge.off { background: var(--surface2); color: var(--text3); border: 1px solid var(--border); }
+.integ-body { padding-top: 4px; }
+.integ-input-row { display: flex; gap: 8px; margin-bottom: 6px; }
+.integ-input-row input { flex: 1; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.integ-hint { font-size: 10px; color: var(--text3); margin-top: 4px; }
+.integ-hint a { color: var(--primary); }
+.oauth-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: var(--rsm);
+  font-size: 12px; font-weight: 600; cursor: pointer; border: none;
+  transition: all .2s;
+}
+.oauth-google { background: white; color: #333; box-shadow: 0 1px 4px rgba(0,0,0,0.2); border: 1px solid var(--border); }
+.oauth-google:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.oauth-notion { background: #000; color: white; }
+.oauth-notion:hover { background: #222; }
+.oauth-slack { background: #4A154B; color: white; }
+.oauth-slack:hover { background: #611f64; }
+.integ-connected-info { font-size: 11px; color: var(--green); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; }
+.disconnect-btn {
+  font-size: 11px; color: var(--text3); background: none; border: none;
+  cursor: pointer; padding: 0; font-family: 'Space Grotesk', sans-serif;
+  transition: color .15s;
+}
+.disconnect-btn:hover { color: var(--red); }
+
+/* ─── CHAT HISTORY PANEL ─── */
+#view-chat { position: relative; overflow: hidden; }
+.hist-overlay {
+  position: absolute; inset: 0;
+  background: rgba(2,0,138,0.15);
+  backdrop-filter: blur(2px);
+  z-index: 99; display: none; cursor: pointer;
+}
+.hist-overlay.open { display: block; }
+.hist-panel {
+  position: absolute; top: 0; left: 0;
+  width: 240px; height: 100%;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  box-shadow: 4px 0 24px rgba(2,0,138,0.1);
+  display: flex; flex-direction: column;
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: transform .22s cubic-bezier(.4,0,.2,1);
+}
+.hist-panel.open { transform: translateX(0); }
+.hist-panel-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.hist-new-btn {
+  flex: 1; padding: 7px 10px; border-radius: var(--rsm);
+  background: var(--primary); color: white;
+  border: none; cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700;
+  transition: background .15s;
+}
+.hist-new-btn:hover { background: var(--primary-d); }
+.hist-close-btn {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text3); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.hist-close-btn:hover { background: var(--surface2); color: var(--text); }
+.hist-folder-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px 6px; flex-shrink: 0;
+}
+.hist-folder-btn {
+  font-size: 11px; color: var(--text3); cursor: pointer;
+  background: none; border: none; font-family: 'Space Grotesk', sans-serif;
+  padding: 4px 0; transition: color .15s; font-weight: 600;
+}
+.hist-folder-btn:hover { color: var(--primary); }
+.hist-list { flex: 1; overflow-y: auto; padding: 4px 8px 12px; }
+.hist-folder-group { margin-bottom: 12px; }
+.hist-folder-label {
+  font-size: 9px; color: var(--text3); font-family: 'Space Grotesk', sans-serif;
+  text-transform: uppercase; letter-spacing: .08em;
+  padding: 6px 4px 4px; display: flex; align-items: center; gap: 6px; font-weight: 600;
+}
+.hist-folder-label button {
+  margin-left: auto; background: none; border: none;
+  color: var(--text3); cursor: pointer; font-size: 11px; padding: 0 2px;
+  opacity: 0; transition: opacity .15s;
+}
+.hist-folder-label:hover button { opacity: 1; }
+.hist-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 8px; border-radius: 6px; cursor: pointer;
+  transition: background .12s; position: relative;
+  border: 1px solid transparent;
+}
+.hist-item:hover { background: var(--surface2); }
+.hist-item.active {
+  background: var(--primary-light); border-color: var(--primary-light2);
+}
+.hist-item-emoji { font-size: 13px; flex-shrink: 0; }
+.hist-item-body { flex: 1; min-width: 0; }
+.hist-item-title { font-size: 11px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hist-item-meta { font-size: 9px; color: var(--text3); font-family: 'Space Grotesk', sans-serif; margin-top: 1px; }
+.hist-item-del {
+  opacity: 0; background: none; border: none;
+  color: var(--text3); cursor: pointer; font-size: 12px;
+  padding: 2px 4px; border-radius: 4px; transition: all .12s;
+}
+.hist-item:hover .hist-item-del { opacity: 1; }
+.hist-item-del:hover { color: var(--red); background: var(--red-bg); }
+.hist-empty { font-size: 11px; color: var(--text3); text-align: center; padding: 24px 8px; font-family: 'Space Grotesk', sans-serif; }
+.hist-menu-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 17px; color: var(--text2); padding: 4px 6px;
+  border-radius: 6px; transition: all .15s; flex-shrink: 0; line-height: 1;
+}
+.hist-menu-btn:hover { background: var(--surface2); color: var(--text); }
+</style>
+</head>
+<body>
+<div id="toast-container"></div>
+
+<!-- MODAL: Ejecutar Tool -->
+<div class="modal-overlay" id="modal-run-tool">
+  <div class="modal">
+    <div class="modal-title" id="run-tool-title">Ejecutar Tool</div>
+    <div class="modal-sub" id="run-tool-sub">PARÁMETROS</div>
+    <div class="tool-params" id="run-tool-params"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-run-tool')">Cancelar</button>
+      <button class="btn btn-primary" onclick="executeTool()">▶ Ejecutar</button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🐻‍❄️</div>
+      <div>
+        <div class="logo-text">Re<span>mi</span></div>
+        <div class="logo-ver">Tu Academia</div>
+      </div>
+    </div>
+
+    <div class="agent-pill" id="agent-pill">
+      <div class="agent-pill-name"><span id="agent-emoji">🤖</span> <span id="agent-name">Cargando...</span></div>
+      <div class="agent-pill-sub" id="agent-area">—</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-item active" id="nav-chat" onclick="showView('chat')">
+        <span class="nav-icon">💬</span> Chat
+      </div>
+      <div class="nav-item" id="nav-tareas" onclick="showView('tareas')">
+        <span class="nav-icon">✅</span> Tareas
+        <span class="nav-badge hidden" id="badge-tareas" style="">0</span>
+      </div>
+      <div class="nav-item" id="nav-tools" onclick="showView('tools')">
+        <span class="nav-icon">🔧</span> Mis Tools
+        <span class="nav-badge" id="tools-count" style="display:none">0</span>
+      </div>
+      <div class="nav-item" id="nav-request" onclick="showView('request')">
+        <span class="nav-icon">📨</span> Solicitar Tool
+      </div>
+      <div class="nav-item" id="nav-integraciones" onclick="showView('integraciones')">
+        <span class="nav-icon">🔗</span> Integraciones
+      </div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <div class="user-avatar" id="user-initial">U</div>
+        <div>
+          <div class="user-name" id="user-name">Usuario</div>
+          <div class="user-role">USUARIO</div>
+        </div>
+        <div class="logout-btn" onclick="logout()" title="Cerrar sesión">⎋</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <button class="hist-menu-btn" id="hist-menu-btn" onclick="toggleHistPanel()" title="Historial de chats">☰</button>
+      <div class="topbar-title" id="topbar-title">Chat <span>/ con Remi</span></div>
+      <div class="notif-wrap" id="notif-wrap">
+        <div class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notificaciones">
+          🔔<span class="notif-count hidden" id="notif-count">0</span>
+        </div>
+        <div class="notif-panel hidden" id="notif-panel">
+          <div class="notif-panel-header">
+            <span class="notif-panel-title">🔔 Notificaciones</span>
+            <button class="notif-mark-read" onclick="markNotifsRead()">Marcar leídas</button>
+          </div>
+          <div class="notif-list" id="notif-list">
+            <div class="notif-empty-msg">Sin notificaciones</div>
+          </div>
+        </div>
+      </div>
+      <div class="status-pill"><span class="dot dot-green"></span> <span id="agent-status-text">Agente activo</span></div>
+    </div>
+
+    <!-- ── CHAT VIEW ── -->
+    <div id="view-chat" class="view active">
+      <!-- History panel overlay -->
+      <div class="hist-overlay" id="hist-overlay" onclick="closeHistPanel()"></div>
+      <!-- History slide panel -->
+      <div class="hist-panel" id="hist-panel">
+        <div class="hist-panel-header">
+          <button class="hist-new-btn" onclick="newChat()">✏ Nuevo chat</button>
+          <button class="hist-close-btn" onclick="closeHistPanel()">✕</button>
+        </div>
+        <div class="hist-folder-row">
+          <button class="hist-folder-btn" onclick="openNewFolderModal()">🗂 Nueva carpeta</button>
+        </div>
+        <div class="hist-list" id="hist-list"></div>
+      </div>
+      <!-- Welcome (shown when no messages) -->
+      <div class="chat-welcome" id="chat-welcome">
+        <div class="welcome-icon" id="welcome-emoji">🐻‍❄️</div>
+        <div class="welcome-title">Hola, <span id="welcome-name">—</span></div>
+        <div class="welcome-sub" id="welcome-sub">Estoy aquí para ayudarte. ¿En qué trabajamos hoy?</div>
+        <div class="quick-prompts" id="quick-prompts"></div>
+      </div>
+      <!-- Messages (hidden until first message) -->
+      <div class="chat-messages hidden" id="chat-messages"></div>
+
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <textarea
+            class="chat-textarea"
+            id="chat-input"
+            placeholder="Escribe tu mensaje..."
+            rows="1"
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this)"
+          ></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Enviar (Enter)">➤</button>
+        </div>
+        <div class="chat-hint">Enter para enviar · Shift+Enter para nueva línea</div>
+      </div>
+    </div>
+
+    <!-- ── TOOLS VIEW ── -->
+    <div id="view-tools" class="view">
+      <div class="tools-content">
+        <div style="margin-bottom:20px">
+          <h2 style="font-size:18px;font-weight:800;font-family:'Space Grotesk',sans-serif">Mis Tools</h2>
+          <p style="font-size:11px;color:var(--text3);margin-top:3px">Herramientas habilitadas para tu cuenta</p>
+        </div>
+        <div id="tools-list"></div>
+      </div>
+    </div>
+
+    <!-- ── REQUEST VIEW ── -->
+    <div id="view-request" class="view">
+      <div class="request-content">
+        <div class="request-form">
+          <h2>Solicitar una Tool</h2>
+          <p>Si necesitas acceso a una herramienta que no tienes habilitada, envía una solicitud al administrador. Te la habilitarán si corresponde a tu área.</p>
+          <div class="form-group">
+            <label>Tool que necesitas</label>
+            <select id="req-tool-select"></select>
+          </div>
+          <div class="form-group">
+            <label>¿Para qué la necesitas?</label>
+            <textarea id="req-reason" rows="4" placeholder="Describe brevemente el caso de uso..."></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="submitRequest()">Enviar solicitud</button>
+          <div id="request-feedback" style="margin-top:12px;display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAREAS VIEW ── -->
+    <div id="view-tareas" class="view">
+      <div class="tasks-wrap">
+        <div class="tasks-container">
+          <div class="tasks-header">
+            <h2>✅ Tareas del día</h2>
+            <div class="task-date-label" id="tasks-date-label">Cargando...</div>
+          </div>
+
+          <div class="task-input-row">
+            <input type="text" id="task-input" placeholder="Nueva tarea para hoy..." onkeydown="if(event.key==='Enter')addTask()">
+            <button class="add-task-btn" onclick="addTask()">+ Agregar</button>
+          </div>
+
+          <div id="tasks-pending-section">
+            <div class="task-section-label">PENDIENTES</div>
+            <div id="task-list-pending"></div>
+          </div>
+
+          <div id="tasks-done-section" style="display:none">
+            <div class="task-section-label" style="margin-top:20px">COMPLETADAS HOY</div>
+            <div id="task-list-done"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INTEGRACIONES VIEW ── -->
+    <div id="view-integraciones" class="view">
+      <div class="integ-wrap">
+        <div class="integ-container">
+          <div class="integ-header">
+            <h2>🔗 Mis Integraciones</h2>
+            <p>Estado de tus cuentas conectadas. Para configurar o cambiar algo, <strong>pídeselo a Remi en el chat</strong>.</p>
+          </div>
+          <div id="integ-cards-user"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- MODAL: Nueva Carpeta -->
+<div class="modal-overlay" id="modal-new-folder">
+  <div class="modal" style="max-width:340px">
+    <div class="modal-title">Nueva Carpeta</div>
+    <div class="modal-sub">ORGANIZAR CHATS</div>
+    <div class="form-group"><label>Nombre de la carpeta</label><input type="text" id="nf-name" placeholder="Ej: CRM, Ventas, Ideas..."></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-new-folder')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createFolder()">Crear carpeta</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+const U = {
+  user: null,        // { id, name, role, assignedAgents, allowedTools }
+  agent: null,       // full agent config (activo actualmente)
+  assignedAgents: [], // todos los agentes asignados
+  tools: [],         // all tools
+  myTools: [],       // filtered allowed tools
+  messages: [],      // chat history for API
+  isStreaming: false,
+  runningTool: null
+};
+
+// ── Historial de chats multi-conversación ─────────────────────────────────────
+// Keys: remi_convs_{uid}, remi_conv_{uid}_{convId}, remi_folders_{uid}
+
+function _convsKey()          { return `remi_convs_${U.user?.id}`; }
+function _convKey(id)         { return `remi_conv_${U.user?.id}_${id}`; }
+function _foldersKey()        { return `remi_folders_${U.user?.id}`; }
+
+function _loadConvs()   { try { return JSON.parse(localStorage.getItem(_convsKey()) || '[]'); } catch { return []; } }
+function _saveConvs(v)  { try { localStorage.setItem(_convsKey(), JSON.stringify(v)); } catch {} }
+function _loadFolders() { try { return JSON.parse(localStorage.getItem(_foldersKey()) || '[]'); } catch { return []; } }
+function _saveFolders(v){ try { localStorage.setItem(_foldersKey(), JSON.stringify(v)); } catch {} }
+function _loadConvMsgs(id) { try { return JSON.parse(localStorage.getItem(_convKey(id)) || '[]'); } catch { return []; } }
+function _saveConvMsgs(id, msgs) { try { localStorage.setItem(_convKey(id), JSON.stringify(msgs.slice(-80))); } catch {} }
+
+let U_currentConvId = null;
+
+function loadUserHistory() {
+  if (!U.user?.id || !U.agent?.id) return;
+
+  // Migrar historial legacy si existe
+  const legacyKey = `remi_hist_${U.user.id}_${U.agent.id}`;
+  const legacy = localStorage.getItem(legacyKey);
+  if (legacy) {
+    try {
+      const msgs = JSON.parse(legacy);
+      if (msgs.length > 0) {
+        const convId = `conv_${Date.now()}`;
+        const convs = _loadConvs();
+        convs.unshift({ id: convId, title: msgs[0]?.content?.slice(0,40) || 'Chat anterior', agentId: U.agent.id, folderId: null, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+        _saveConvs(convs);
+        _saveConvMsgs(convId, msgs);
+        localStorage.removeItem(legacyKey);
+        U_currentConvId = convId;
+        U.messages = msgs;
+        document.getElementById('chat-welcome').classList.add('hidden');
+        document.getElementById('chat-messages').classList.remove('hidden');
+        U.messages.forEach(m => addMessage(m.role, m.content));
+        renderHistList();
+        return;
+      }
+    } catch {}
+    localStorage.removeItem(legacyKey);
+  }
+
+  // Cargar última conversación de este agente
+  const convs = _loadConvs().filter(c => c.agentId === U.agent.id);
+  if (convs.length > 0) {
+    const last = convs[0];
+    U_currentConvId = last.id;
+    U.messages = _loadConvMsgs(last.id);
+    if (U.messages.length > 0) {
+      document.getElementById('chat-welcome').classList.add('hidden');
+      document.getElementById('chat-messages').classList.remove('hidden');
+      U.messages.forEach(m => addMessage(m.role, m.content));
+    }
+  }
+  renderHistList();
+}
+
+function saveUserHistory() {
+  if (!U.user?.id || !U.agent?.id || !U_currentConvId) return;
+  _saveConvMsgs(U_currentConvId, U.messages);
+  // Actualizar timestamp
+  const convs = _loadConvs();
+  const idx = convs.findIndex(c => c.id === U_currentConvId);
+  if (idx >= 0) { convs[idx].updatedAt = new Date().toISOString(); _saveConvs(convs); }
+  renderHistList();
+}
+
+function _startNewConversation(firstMsg) {
+  const convId = `conv_${Date.now()}`;
+  U_currentConvId = convId;
+  const convs = _loadConvs();
+  convs.unshift({ id: convId, title: firstMsg.slice(0, 45), agentId: U.agent.id, folderId: null, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+  _saveConvs(convs);
+}
+
+function newChat() {
+  U.messages = [];
+  U_currentConvId = null;
+  document.getElementById('chat-messages').innerHTML = '';
+  document.getElementById('chat-welcome').classList.remove('hidden');
+  document.getElementById('chat-messages').classList.add('hidden');
+  closeHistPanel();
+  document.getElementById('chat-input').focus();
+}
+
+function loadConversation(convId) {
+  const msgs = _loadConvMsgs(convId);
+  U_currentConvId = convId;
+  U.messages = msgs;
+  document.getElementById('chat-messages').innerHTML = '';
+  if (msgs.length > 0) {
+    document.getElementById('chat-welcome').classList.add('hidden');
+    document.getElementById('chat-messages').classList.remove('hidden');
+    msgs.forEach(m => addMessage(m.role, m.content));
+  } else {
+    document.getElementById('chat-welcome').classList.remove('hidden');
+    document.getElementById('chat-messages').classList.add('hidden');
+  }
+  closeHistPanel();
+  renderHistList();
+}
+
+function deleteConversation(convId, e) {
+  e.stopPropagation();
+  if (!confirm('¿Eliminar esta conversación?')) return;
+  let convs = _loadConvs();
+  convs = convs.filter(c => c.id !== convId);
+  _saveConvs(convs);
+  localStorage.removeItem(_convKey(convId));
+  if (U_currentConvId === convId) newChat();
+  else renderHistList();
+}
+
+// ── Carpetas ──────────────────────────────────────────────────────────────────
+function openNewFolderModal() {
+  document.getElementById('nf-name').value = '';
+  openModal('modal-new-folder');
+}
+
+function createFolder() {
+  const name = document.getElementById('nf-name').value.trim();
+  if (!name) { toast('Ingresa un nombre', 'error'); return; }
+  const folders = _loadFolders();
+  folders.push({ id: `folder_${Date.now()}`, name });
+  _saveFolders(folders);
+  closeModal('modal-new-folder');
+  renderHistList();
+  toast(`Carpeta "${name}" creada`, 'success');
+}
+
+function deleteFolder(folderId, e) {
+  e.stopPropagation();
+  if (!confirm('¿Eliminar carpeta? Los chats quedarán sin carpeta.')) return;
+  const folders = _loadFolders().filter(f => f.id !== folderId);
+  _saveFolders(folders);
+  // Mover convs de esta carpeta a sin carpeta
+  const convs = _loadConvs().map(c => c.folderId === folderId ? { ...c, folderId: null } : c);
+  _saveConvs(convs);
+  renderHistList();
+}
+
+function moveToFolder(convId, folderId) {
+  const convs = _loadConvs().map(c => c.id === convId ? { ...c, folderId: folderId || null } : c);
+  _saveConvs(convs);
+  renderHistList();
+}
+
+// ── Panel historial ───────────────────────────────────────────────────────────
+function toggleHistPanel() {
+  const panel = document.getElementById('hist-panel');
+  const overlay = document.getElementById('hist-overlay');
+  const isOpen = panel.classList.contains('open');
+  if (isOpen) { closeHistPanel(); }
+  else {
+    panel.classList.add('open');
+    overlay.classList.add('open');
+    renderHistList();
+  }
+}
+
+function closeHistPanel() {
+  document.getElementById('hist-panel')?.classList.remove('open');
+  document.getElementById('hist-overlay')?.classList.remove('open');
+}
+
+function renderHistList() {
+  const container = document.getElementById('hist-list');
+  if (!container) return;
+  const allConvs = _loadConvs().filter(c => c.agentId === U.agent?.id);
+  const folders = _loadFolders();
+
+  if (allConvs.length === 0) {
+    container.innerHTML = `<div class="hist-empty">Sin conversaciones aún.<br>Empieza un nuevo chat.</div>`;
+    return;
+  }
+
+  let html = '';
+
+  // Carpetas primero
+  for (const folder of folders) {
+    const folderConvs = allConvs.filter(c => c.folderId === folder.id);
+    html += `<div class="hist-folder-group">
+      <div class="hist-folder-label">
+        🗂 ${escHtml(folder.name)} <span style="color:var(--text3)">(${folderConvs.length})</span>
+        <button onclick="deleteFolder('${folder.id}', event)" title="Eliminar carpeta">🗑</button>
+      </div>
+      ${folderConvs.map(c => _convItemHtml(c, folders)).join('')}
+      ${folderConvs.length === 0 ? '<div style="font-size:10px;color:var(--text3);padding:4px 8px;font-family:\'Space Grotesk\',sans-serif">Vacía</div>' : ''}
+    </div>`;
+  }
+
+  // Sin carpeta
+  const uncategorized = allConvs.filter(c => !c.folderId);
+  if (uncategorized.length > 0) {
+    if (folders.length > 0) html += `<div class="hist-folder-label" style="margin-top:4px">— Sin carpeta —</div>`;
+    html += uncategorized.map(c => _convItemHtml(c, folders)).join('');
+  }
+
+  container.innerHTML = html;
+}
+
+function _convItemHtml(conv, folders) {
+  const agent = U.assignedAgents?.find(a => a.id === conv.agentId) || { emoji: '🤖' };
+  const d = new Date(conv.updatedAt || conv.createdAt);
+  const dateStr = d.toLocaleDateString('es-CO', { day:'2-digit', month:'2-digit' });
+  const isActive = conv.id === U_currentConvId;
+
+  // Folder options for context menu (simplified: select to move)
+  const folderOpts = folders.map(f =>
+    `<option value="${f.id}" ${conv.folderId===f.id?'selected':''}>${f.name}</option>`
+  ).join('');
+  const moveSelect = folders.length > 0
+    ? `<select onchange="moveToFolder('${conv.id}',this.value)" onclick="event.stopPropagation()"
+         style="font-size:9px;background:var(--surface2);border:none;color:var(--text3);margin-top:2px;max-width:80px;cursor:pointer;border-radius:3px;padding:1px 2px">
+         <option value="">Sin carpeta</option>${folderOpts}
+       </select>`
+    : '';
+
+  return `<div class="hist-item ${isActive?'active':''}" onclick="loadConversation('${conv.id}')">
+    <span class="hist-item-emoji">${agent.emoji}</span>
+    <div class="hist-item-body">
+      <div class="hist-item-title">${escHtml(conv.title)}</div>
+      <div class="hist-item-meta">${dateStr}${moveSelect ? ' · ' : ''}${moveSelect}</div>
+    </div>
+    <button class="hist-item-del" onclick="deleteConversation('${conv.id}',event)" title="Eliminar">✕</button>
+  </div>`;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+async function init() {
+  // Load user session from config (stored temporarily)
+  const sessionCfg = await window.remi.config.read('session');
+  U.user = sessionCfg.currentUser;
+
+  if (!U.user) { await window.remi.auth.logout(); return; }
+
+  // UI: user info
+  document.getElementById('user-name').textContent = U.user.name;
+  document.getElementById('user-initial').textContent = U.user.name.charAt(0).toUpperCase();
+  document.getElementById('welcome-name').textContent = U.user.name.split(' ')[0];
+
+  // Load agent config — soporta assignedAgents (array) y assignedAgent (legacy string)
+  const agentsCfg = await window.remi.config.read('agents');
+  const allAgents = agentsCfg.agents || [];
+  // Remi-main siempre disponible para todos los usuarios
+  const REMI_MAIN_USER_STUB = { id: 'remi-main', name: 'Remi', emoji: '🐻‍❄️', active: true, area: 'Orquestador · Todas las áreas', model: 'claude-sonnet-4-6' };
+  if (!allAgents.find(a => a.id === 'remi-main')) allAgents.unshift(REMI_MAIN_USER_STUB);
+  let agentIds = U.user.assignedAgents?.length
+    ? U.user.assignedAgents
+    : (U.user.assignedAgent ? [U.user.assignedAgent] : []);
+  // Garantizar remi-main en la lista de cualquier usuario
+  if (!agentIds.includes('remi-main')) agentIds = ['remi-main', ...agentIds];
+  U.assignedAgents = allAgents.filter(a => agentIds.includes(a.id));
+  // Remi-main primero
+  U.assignedAgents.sort((a, b) => (a.id === 'remi-main' ? -1 : b.id === 'remi-main' ? 1 : 0));
+  U.agent = U.assignedAgents[0] || null;
+
+  if (U.agent) {
+    _applyAgent(U.agent);
+    // Si tiene más de un agente, convertir el pill en selector
+    if (U.assignedAgents.length > 1) {
+      document.getElementById('agent-pill').innerHTML = `
+        <select id="agent-switcher" onchange="switchAgent(this.value)" style="background:transparent;border:none;color:var(--text);font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;cursor:pointer;outline:none;width:100%;padding:0">
+          ${U.assignedAgents.map(a => `<option value="${a.id}">${a.emoji} ${a.name}</option>`).join('')}
+        </select>
+        <div class="agent-pill-sub" id="agent-area">${U.agent.area}</div>`;
+    }
+  }
+
+  // Load tools
+  const toolsCfg = await window.remi.config.read('tools');
+  U.tools = toolsCfg.tools || [];
+  U.myTools = U.tools.filter(t => t.active && (U.user.allowedTools || []).includes(t.id));
+
+  // Tools count badge
+  const badge = document.getElementById('tools-count');
+  if (U.myTools.length > 0) { badge.textContent = U.myTools.length; badge.style.display = ''; }
+
+  // Quick prompts
+  const prompts = U.agent ? getQuickPrompts(U.agent.id) : [];
+  document.getElementById('quick-prompts').innerHTML = prompts
+    .map(p => `<div class="quick-prompt" onclick="usePrompt(this)">${p}</div>`).join('');
+
+  // Request: populate available tools to request
+  const notMyTools = U.tools.filter(t => !(U.user.allowedTools || []).includes(t.id));
+  const reqSel = document.getElementById('req-tool-select');
+  reqSel.innerHTML = notMyTools.length
+    ? notMyTools.map(t => `<option value="${t.id}">${t.id}</option>`).join('')
+    : '<option value="">No hay tools disponibles para solicitar</option>';
+
+  // Chat stream listeners
+  window.remi.chat.onChunk(({ text }) => appendChunk(text));
+  window.remi.chat.onDone(() => finishStream());
+  window.remi.chat.onError(({ error }) => handleStreamError(error));
+
+  // Cargar historial del usuario para su agente asignado
+  loadUserHistory();
+
+  renderTools();
+
+  // Tareas y notificaciones
+  await requestNotifPermission();
+  await loadTasks();
+  await loadNotifications();
+  startNotifPolling();
+  startTaskScheduler();
+
+  // Check OAuth callback result
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('oauth') === 'success') {
+    const svc = params.get('service'), oname = params.get('name') || '';
+    toast(`✓ ${svc} conectado${oname ? ' · ' + decodeURIComponent(oname) : ''}`, 'success');
+    history.replaceState({}, '', window.location.pathname);
+  } else if (params.get('oauth') === 'error') {
+    toast(`Error conectando ${params.get('service')}: ${params.get('msg') || 'desconocido'}`, 'error');
+    history.replaceState({}, '', window.location.pathname);
+  }
+
+  await loadIntegraciones();
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────────────
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`view-${name}`).classList.add('active');
+  document.getElementById(`nav-${name}`).classList.add('active');
+  const titles = {
+    chat: ['Chat', `/ con ${U.agent?.name || 'Remi'}`],
+    tareas: ['Tareas', '/ lista del día'],
+    tools: ['Mis Tools', '/ herramientas habilitadas'],
+    request: ['Solicitar Tool', '/ pedir acceso'],
+    integraciones: ['Integraciones', '/ mis cuentas']
+  };
+  const [t, s] = titles[name] || [name, ''];
+  document.getElementById('topbar-title').innerHTML = `${t} <span>${s}</span>`;
+  if (name === 'tareas') renderTareas();
+  if (name === 'integraciones') renderIntegraciones();
+}
+
+// ─── CHAT ────────────────────────────────────────────────────────────────────
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function usePrompt(el) {
+  document.getElementById('chat-input').value = el.textContent;
+  sendMessage();
+}
+
+async function sendMessage() {
+  if (U.isStreaming) return;
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  if (!U.agent) { toast('No tienes un agente asignado', 'error'); return; }
+  if (!U.agent.active) { toast('Tu agente está desactivado', 'error'); return; }
+
+  input.value = '';
+  input.style.height = 'auto';
+
+  // Crear conversación nueva si es el primer mensaje
+  if (!U_currentConvId) _startNewConversation(text);
+  // Show messages panel
+  document.getElementById('chat-welcome').classList.add('hidden');
+  document.getElementById('chat-messages').classList.remove('hidden');
+
+  // Add user bubble
+  addMessage('user', text);
+  U.messages.push({ role: 'user', content: text });
+
+  // Add assistant typing bubble
+  const assistantId = `msg-${Date.now()}`;
+  addTypingBubble(assistantId);
+
+  U.isStreaming = true;
+  document.getElementById('send-btn').disabled = true;
+
+  const appCfg = await window.remi.config.read('app');
+  window.remi.chat.send(U.messages, U.agent.id, appCfg.anthropicApiKey);
+}
+
+let currentAssistantText = '';
+let currentAssistantId = '';
+
+function addTypingBubble(id) {
+  currentAssistantId = id;
+  currentAssistantText = '';
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg assistant';
+  div.id = id;
+  div.innerHTML = `
+    <div class="msg-avatar">${U.agent?.emoji || '🐻‍❄️'}</div>
+    <div>
+      <div class="msg-bubble" id="bubble-${id}">
+        <div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+      </div>
+      <div class="msg-time" id="time-${id}"></div>
+    </div>`;
+  container.appendChild(div);
+  scrollToBottom();
+}
+
+function appendChunk(text) {
+  currentAssistantText += text;
+  const bubble = document.getElementById(`bubble-${currentAssistantId}`);
+  if (bubble) { bubble.innerHTML = renderMarkdown(currentAssistantText); scrollToBottom(); }
+}
+
+function finishStream() {
+  U.isStreaming = false;
+  document.getElementById('send-btn').disabled = false;
+  const timeEl = document.getElementById(`time-${currentAssistantId}`);
+  if (timeEl) timeEl.textContent = fmtTime(new Date());
+  U.messages.push({ role: 'assistant', content: currentAssistantText });
+  saveUserHistory();
+  currentAssistantText = '';
+  document.getElementById('chat-input').focus();
+}
+
+function handleStreamError(error) {
+  U.isStreaming = false;
+  document.getElementById('send-btn').disabled = false;
+  const bubble = document.getElementById(`bubble-${currentAssistantId}`);
+  if (bubble) bubble.innerHTML = `<span style="color:var(--red)">⚠ Error: ${escHtml(error)}</span>`;
+  toast(error, 'error');
+}
+
+function addMessage(role, text) {
+  const container = document.getElementById('chat-messages');
+  const isUser = role === 'user';
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `
+    <div class="msg-avatar">${isUser ? U.user?.name?.charAt(0).toUpperCase() || 'U' : (U.agent?.emoji || '🐻‍❄️')}</div>
+    <div>
+      <div class="msg-bubble">${isUser ? escHtml(text) : renderMarkdown(text)}</div>
+      <div class="msg-time">${fmtTime(new Date())}</div>
+    </div>`;
+  container.appendChild(div);
+  scrollToBottom();
+}
+
+function scrollToBottom() {
+  const c = document.getElementById('chat-messages');
+  c.scrollTop = c.scrollHeight;
+}
+
+// ─── TOOLS ───────────────────────────────────────────────────────────────────
+function renderTools() {
+  const list = document.getElementById('tools-list');
+  if (!U.myTools.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🔧</div><p>No tienes tools habilitadas.<br>Puedes solicitar acceso en "Solicitar Tool".</p></div>`;
+    return;
+  }
+  list.innerHTML = U.myTools.map(t => `
+    <div class="tool-card">
+      <div class="tool-icon">⚙️</div>
+      <div class="tool-info">
+        <div class="tool-name">${t.id}</div>
+        <div class="tool-desc">${t.description}</div>
+      </div>
+      <button class="tool-run-btn" onclick="openRunTool('${t.id}')">▶ Ejecutar</button>
+    </div>`).join('');
+}
+
+function openRunTool(toolId) {
+  const tool = U.myTools.find(t => t.id === toolId);
+  if (!tool) return;
+  U.runningTool = toolId;
+  document.getElementById('run-tool-title').textContent = toolId;
+  document.getElementById('run-tool-sub').textContent = tool.description;
+  // Render param fields from tool schema
+  const params = tool.params || [];
+  document.getElementById('run-tool-params').innerHTML = params.length
+    ? params.map(p => `
+      <div class="form-group">
+        <label>${p.label || p.name}</label>
+        <input type="text" id="param-${p.name}" placeholder="${p.placeholder || ''}">
+      </div>`).join('')
+    : '<p style="font-size:12px;color:var(--text3)">Esta tool no requiere parámetros adicionales.</p>';
+  openModal('modal-run-tool');
+}
+
+function executeTool() {
+  const tool = U.myTools.find(t => t.id === U.runningTool);
+  if (!tool) return;
+  // Build natural language message to the agent
+  const params = (tool.params || []).map(p => `${p.name}: ${document.getElementById(`param-${p.name}`)?.value || ''}`).join(', ');
+  const msg = params ? `Ejecuta ${U.runningTool} con ${params}` : `Ejecuta ${U.runningTool}`;
+  closeModal('modal-run-tool');
+  showView('chat');
+  document.getElementById('chat-input').value = msg;
+  sendMessage();
+}
+
+// ─── TOOL REQUEST ─────────────────────────────────────────────────────────────
+async function submitRequest() {
+  const toolId = document.getElementById('req-tool-select').value;
+  const reason = document.getElementById('req-reason').value.trim();
+  if (!toolId) { toast('Selecciona una tool', 'error'); return; }
+  const result = await window.remi.users.requestTool({
+    userId: U.user.id, userName: U.user.name,
+    toolId, toolName: toolId, reason
+  });
+  const fb = document.getElementById('request-feedback');
+  if (result.ok) {
+    fb.innerHTML = `<div style="background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--rsm);padding:10px 14px;font-size:12px;color:var(--green)">✓ Solicitud enviada. El admin la revisará pronto.</div>`;
+    fb.style.display = 'block';
+    document.getElementById('req-reason').value = '';
+    toast('Solicitud enviada', 'success');
+    // Notificar a todos los admins
+    try {
+      const admins = await fetch('/api/web/admins').then(r => r.json());
+      for (const admin of (admins || [])) {
+        await _apiNotif(admin.id, `📨 ${U.user.name} solicita acceso a "${toolId}"${reason ? ': ' + reason.slice(0,60) : ''}`, 'info');
+      }
+    } catch {}
+  } else { toast('Error al enviar solicitud', 'error'); }
+}
+
+// ─── MODAL ───────────────────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) closeModal(e.target.id);
+});
+
+// ─── LOGOUT ──────────────────────────────────────────────────────────────────
+async function logout() {
+  window.remi.chat.removeListeners();
+  await window.remi.auth.logout();
+}
+
+// ─── QUICK PROMPTS ───────────────────────────────────────────────────────────
+function getQuickPrompts(agentId) {
+  const prompts = {
+    'remi-crm': ['Buscar un contacto en GHL', 'Ver oportunidades abiertas', 'Crear una nota en un contacto'],
+    'remi-ventas': ['Ver leads sin actividad', '¿Cuántos demos hay esta semana?', 'Mover oportunidad de etapa'],
+    'remi-soporte': ['Ver mensajes sin responder', 'Revisar tickets pendientes', 'Responder a un cliente'],
+    'remi-marketing': ['Revisar métricas de campaña', 'Ver rendimiento de ads', 'Pausa una campaña activa'],
+    'remi-research': ['Investigar competidor', 'Buscar benchmark del mercado', 'Analizar tendencia'],
+    'remi-reportes': ['Generar reporte semanal', 'Ver KPIs del pipeline', 'Resumen de actividad hoy']
+  };
+  return prompts[agentId] || ['¿En qué puedo ayudarte?', 'Muéstrame el resumen de hoy'];
+}
+
+// ─── TASKS ────────────────────────────────────────────────────────────────────
+
+const TASKS = { list: [], userId: null };
+
+function _todayStr() { return new Date().toISOString().split('T')[0]; }
+function _authH() { return { 'Authorization': `Bearer ${window.remi.getToken()}`, 'Content-Type': 'application/json' }; }
+
+async function loadTasks() {
+  TASKS.userId = U.user?.id || 'user';
+  try {
+    const r = await fetch(`/api/tasks/${TASKS.userId}`, { headers: _authH() });
+    TASKS.list = (await r.json()).tasks || [];
+  } catch { TASKS.list = []; }
+
+  // Carry-over: mover pendientes de días anteriores a hoy
+  const today = _todayStr();
+  let changed = false;
+  TASKS.list.forEach(t => {
+    if (!t.done && t.date < today) { t.date = today; t.carryover = true; changed = true; }
+  });
+  if (changed) await saveTasks();
+  renderTareas();
+  updateTasksBadge();
+}
+
+async function saveTasks() {
+  try {
+    await fetch(`/api/tasks/${TASKS.userId}`, {
+      method: 'POST', headers: _authH(),
+      body: JSON.stringify({ tasks: TASKS.list })
+    });
+  } catch {}
+}
+
+async function addTask() {
+  const input = document.getElementById('task-input');
+  const text = input.value.trim();
+  if (!text) return;
+  TASKS.list.push({ id: `t_${Date.now()}`, text, date: _todayStr(), done: false, carryover: false, createdAt: new Date().toISOString() });
+  input.value = '';
+  await saveTasks();
+  renderTareas();
+  updateTasksBadge();
+}
+
+async function toggleTask(id) {
+  const t = TASKS.list.find(t => t.id === id);
+  if (t) { t.done = !t.done; await saveTasks(); renderTareas(); updateTasksBadge(); }
+}
+
+async function deleteTask(id) {
+  TASKS.list = TASKS.list.filter(t => t.id !== id);
+  await saveTasks(); renderTareas(); updateTasksBadge();
+}
+
+function renderTareas() {
+  const dateEl = document.getElementById('tasks-date-label');
+  if (dateEl) {
+    const d = new Date();
+    dateEl.textContent = d.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  }
+  const today = _todayStr();
+  const todayTasks = TASKS.list.filter(t => t.date === today);
+  const pending = todayTasks.filter(t => !t.done);
+  const done    = todayTasks.filter(t => t.done);
+
+  const itemHtml = (t) => `
+    <div class="task-card ${t.done ? 'done' : ''}">
+      <div class="task-check" onclick="toggleTask('${t.id}')">${t.done ? '✓' : ''}</div>
+      <span class="task-text">${escHtml(t.text)}</span>
+      ${t.carryover && !t.done ? '<span class="task-carry">🔄 arrastrada</span>' : ''}
+      <button class="task-del" onclick="deleteTask('${t.id}')" title="Eliminar">🗑</button>
+    </div>`;
+
+  const lp = document.getElementById('task-list-pending');
+  const ld = document.getElementById('task-list-done');
+  if (!lp || !ld) return;
+
+  lp.innerHTML = pending.length
+    ? pending.map(itemHtml).join('')
+    : '<div class="tasks-empty"><div class="ei">🎉</div>¡Sin pendientes! Agrega tareas arriba.</div>';
+
+  if (done.length) {
+    ld.innerHTML = done.map(itemHtml).join('');
+    document.getElementById('tasks-done-section').style.display = '';
+  } else {
+    document.getElementById('tasks-done-section').style.display = 'none';
+  }
+}
+
+function updateTasksBadge() {
+  const pending = TASKS.list.filter(t => t.date === _todayStr() && !t.done).length;
+  const b = document.getElementById('badge-tareas');
+  if (!b) return;
+  if (pending > 0) { b.textContent = pending; b.style.display = ''; }
+  else { b.style.display = 'none'; }
+}
+
+// ─── NOTIFICATIONS ────────────────────────────────────────────────────────────
+
+const NOTIFS = { list: [], userId: null };
+
+async function loadNotifications() {
+  NOTIFS.userId = U.user?.id || 'user';
+  try {
+    const r = await fetch(`/api/notifications/${NOTIFS.userId}`, { headers: _authH() });
+    NOTIFS.list = (await r.json()).notifications || [];
+  } catch { NOTIFS.list = []; }
+  _renderNotifBell();
+}
+
+function _renderNotifBell() {
+  const unread = NOTIFS.list.filter(n => !n.read).length;
+  const badge = document.getElementById('notif-count');
+  if (badge) {
+    badge.textContent = unread;
+    badge.classList.toggle('hidden', unread === 0);
+  }
+}
+
+function _renderNotifList() {
+  const list = document.getElementById('notif-list');
+  if (!list) return;
+  if (!NOTIFS.list.length) { list.innerHTML = '<div class="notif-empty-msg">Sin notificaciones</div>'; return; }
+  list.innerHTML = NOTIFS.list.slice(0, 20).map(n => `
+    <div class="notif-item ${n.read ? '' : 'unread'}">
+      <div class="notif-item-msg">${escHtml(n.msg)}</div>
+      <div class="notif-item-time">${fmtTime(n.ts)}</div>
+    </div>`).join('');
+}
+
+function toggleNotifPanel() {
+  const panel = document.getElementById('notif-panel');
+  if (!panel) return;
+  const isOpen = !panel.classList.contains('hidden');
+  panel.classList.toggle('hidden', isOpen);
+  if (!isOpen) _renderNotifList();
+}
+
+async function markNotifsRead() {
+  try {
+    await fetch(`/api/notifications/${NOTIFS.userId}/read`, { method: 'PUT', headers: _authH() });
+  } catch {}
+  NOTIFS.list.forEach(n => n.read = true);
+  _renderNotifBell();
+  _renderNotifList();
+}
+
+// Helper: crear notificación para cualquier usuario
+async function _apiNotif(userId, msg, type = 'info') {
+  try {
+    await fetch(`/api/notifications/${userId}`, {
+      method: 'POST', headers: _authH(),
+      body: JSON.stringify({ msg, type })
+    });
+  } catch {}
+}
+
+function startNotifPolling() {
+  setInterval(async () => {
+    const prevUnread = NOTIFS.list.filter(n => !n.read).length;
+    await loadNotifications();
+    const newUnread = NOTIFS.list.filter(n => !n.read).length;
+    if (newUnread > prevUnread) {
+      const newest = NOTIFS.list.find(n => !n.read);
+      if (newest) _fireBrowserNotif('🔔 Remi — Nueva notificación', newest.msg);
+    }
+  }, 30000);
+}
+
+// ─── BROWSER NOTIFICATION SCHEDULER ─────────────────────────────────────────
+
+async function requestNotifPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    await Notification.requestPermission();
+  }
+}
+
+function _fireBrowserNotif(title, body) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  try { new Notification(title, { body }); } catch {}
+}
+
+function checkScheduledNotifs() {
+  const today = _todayStr();
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+
+  if (h === 9 && m < 5) {
+    const key = `remi_notif_morning_${today}`;
+    if (!localStorage.getItem(key)) {
+      const pending = TASKS.list.filter(t => t.date === today && !t.done).length;
+      const msg = pending > 0
+        ? `¡Buenos días! Tienes ${pending} tarea${pending > 1 ? 's' : ''} pendiente${pending > 1 ? 's' : ''} hoy.`
+        : '¡Buenos días! Sin pendientes. Agrega las tareas del día.';
+      _fireBrowserNotif('☀️ Remi — Inicio de jornada', msg);
+      localStorage.setItem(key, '1');
+    }
+  }
+
+  if (h === 13 && m < 5) {
+    const key = `remi_notif_noon_${today}`;
+    if (!localStorage.getItem(key)) {
+      const pending = TASKS.list.filter(t => t.date === today && !t.done).length;
+      if (pending > 0) {
+        _fireBrowserNotif('🔔 Remi — Recordatorio', `Son las 1pm. Tienes ${pending} tarea${pending > 1 ? 's' : ''} sin completar.`);
+        localStorage.setItem(key, '1');
+      }
+    }
+  }
+}
+
+function startTaskScheduler() {
+  setInterval(checkScheduledNotifs, 60000);
+  checkScheduledNotifs();
+}
+
+// Cerrar panel de notificaciones al hacer click fuera
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('notif-wrap');
+  const panel = document.getElementById('notif-panel');
+  if (panel && wrap && !wrap.contains(e.target)) panel.classList.add('hidden');
+});
+
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+function fmtTime(d) {
+  return new Date(d).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function _applyAgent(agent) {
+  // Actualiza toda la UI con los datos del agente activo
+  if (document.getElementById('agent-emoji')) document.getElementById('agent-emoji').textContent = agent.emoji;
+  if (document.getElementById('agent-name'))  document.getElementById('agent-name').textContent  = agent.name;
+  if (document.getElementById('agent-area'))  document.getElementById('agent-area').textContent  = agent.area;
+  document.getElementById('welcome-emoji').textContent = agent.emoji;
+  document.getElementById('welcome-sub').textContent   = `Soy ${agent.name}. ${agent.area}. ¿En qué trabajamos hoy?`;
+  document.getElementById('agent-status-text').textContent = agent.active ? `${agent.name} activo` : `${agent.name} inactivo`;
+  document.getElementById('topbar-title').innerHTML = `Chat <span>/ con ${agent.name}</span>`;
+  const disabled = !agent.active;
+  document.getElementById('chat-input').disabled  = disabled;
+  document.getElementById('send-btn').disabled    = disabled;
+  document.getElementById('chat-input').placeholder = disabled ? `${agent.name} está desactivado temporalmente` : 'Escribe tu mensaje...';
+  // Quick prompts
+  const prompts = getQuickPrompts(agent.id);
+  document.getElementById('quick-prompts').innerHTML = prompts.map(p => `<div class="quick-prompt" onclick="usePrompt(this)">${p}</div>`).join('');
+}
+
+function switchAgent(agentId) {
+  const agent = U.assignedAgents.find(a => a.id === agentId);
+  if (!agent || agent.id === U.agent?.id) return;
+  U.agent = agent;
+  U_currentConvId = null;
+  U.messages = [];
+  document.getElementById('chat-messages').innerHTML = '';
+  _applyAgent(agent);
+  document.getElementById('chat-welcome').classList.remove('hidden');
+  document.getElementById('chat-messages').classList.add('hidden');
+  loadUserHistory();
+}
+
+function renderMarkdown(text) {
+  // Split on URLs before escaping so query-string & are preserved as links
+  const URL_RE = /(https?:\/\/[^\s\)\]>"]+)/g;
+  const parts = text.split(URL_RE);
+  return parts.map((part, i) => {
+    if (i % 2 === 1) {
+      const safe = escHtml(part);
+      return `<a href="${safe}" target="_blank" rel="noopener" style="color:var(--primary);text-decoration:underline;word-break:break-all">${safe}</a>`;
+    }
+    return escHtml(part)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      .replace(/\n/g, '<br>');
+  }).join('');
+}
+
+function toast(msg, type = 'success') {
+  const icons = { success: '✓', error: '✕', warning: '⚠' };
+  const colors = { success: 'var(--green)', error: 'var(--red)', warning: 'var(--amber)' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span style="color:${colors[type]};font-weight:700">${icons[type]}</span> ${escHtml(msg)}`;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ─── INTEGRATIONS (read-only status panel) ───────────────────────────────────
+
+const INTEG_META = {
+  anthropic: { icon: '🤖', name: 'Claude / Anthropic', desc: 'Tu cerebro personal — API key propia, tus tokens, tu billing' },
+  google:    { icon: '🔵', name: 'Google', desc: 'Calendar · Drive · Sheets · Gmail' },
+  notion:    { icon: '⬛', name: 'Notion', desc: 'Bases de datos · Páginas · Workspace' },
+  slack:     { icon: '💬', name: 'Slack', desc: 'Canales · Mensajes · Archivos' },
+  whatsapp:  { icon: '📱', name: 'WhatsApp', desc: 'Tu número personal de WhatsApp' }
+};
+
+let INTEG_STATUS = {};
+
+async function loadIntegraciones() {
+  try {
+    const r = await fetch(`/api/creds/${U.user.id}/status`, {
+      headers: { 'Authorization': `Bearer ${window.remi.getToken()}` }
+    });
+    const data = await r.json();
+    INTEG_STATUS = data.status || {};
+  } catch { INTEG_STATUS = {}; }
+  renderIntegraciones();
+}
+
+function _integChatShortcut(svcName) {
+  showView('chat');
+  const inp = document.getElementById('chat-input');
+  if (inp) { inp.value = `Quiero configurar mi integración de ${svcName}`; inp.focus(); }
+}
+
+function renderIntegraciones() {
+  const container = document.getElementById('integ-cards-user');
+  if (!container) return;
+
+  container.innerHTML = Object.entries(INTEG_META).map(([svc, meta]) => {
+    const st = INTEG_STATUS[svc] || { connected: false };
+
+    // Build detail lines
+    const details = [];
+    if (st.display)    details.push(`<span style="font-family:'JetBrains Mono',monospace;font-size:11px">${escHtml(st.display)}</span>`);
+    if (st.name && svc === 'google') details.push(`<span style="color:var(--text3);font-size:11px">${escHtml(st.name)}</span>`);
+    if (svc === 'google' && st.connected) {
+      if (st.expired) {
+        details.push(`<span style="color:var(--red);font-size:11px">⚠ Token expirado — necesita reconexión</span>`);
+      } else if (st.expiresIn) {
+        details.push(`<span style="color:var(--text3);font-size:11px">🔒 Token válido (${escHtml(st.expiresIn)})</span>`);
+      }
+    }
+    if (st.updatedAt) {
+      const d = new Date(st.updatedAt);
+      details.push(`<span style="color:var(--text3);font-size:10px">Actualizado: ${d.toLocaleDateString('es-CO')} ${d.toLocaleTimeString('es-CO', {hour:'2-digit',minute:'2-digit'})}</span>`);
+    }
+
+    const healthDot = !st.connected ? '' : (svc === 'google' && st.expired) ? '🟡' : '🟢';
+
+    return `
+      <div class="integ-card ${st.connected ? 'connected' : ''}" id="icard-${svc}">
+        <div class="integ-card-top">
+          <span class="integ-icon">${meta.icon}</span>
+          <div class="integ-info">
+            <div class="integ-name">${meta.name}</div>
+            <div class="integ-desc">${meta.desc}</div>
+          </div>
+          <span class="integ-status-badge ${st.connected ? 'on' : 'off'}">${st.connected ? `${healthDot} Conectado` : '○ No conectado'}</span>
+        </div>
+        <div class="integ-body" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;flex-direction:column;gap:2px">${details.join('')}</div>
+          <button onclick="_integChatShortcut('${escHtml(meta.name)}')" style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--primary-light2);background:var(--primary-light);color:var(--primary);cursor:pointer;white-space:nowrap;font-weight:600;font-family:'Space Grotesk',sans-serif">
+            ${st.connected ? '⚙ Gestionar con Remi' : '→ Configurar con Remi'}
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+init();
+</script>
+</body>
+</html>

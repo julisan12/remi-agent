@@ -1,0 +1,34 @@
+{
+  "_instrucciones": "Config MCP para META ADS (equipo marketing). Copia este archivo a la config de tu cliente MCP y ajusta la ruta: Windows C:\\Users\\tu-usuario\\remi, macOS /Users/tu-usuario/remi. Pega tu Location ID y token en las variables de entorno.",
+  "mcpServers": {
+    "remi-crm": {
+      "command": "node",
+      "args": [
+        "RUTA_REMI/start.js",
+        "ghl"
+      ],
+      "env": {
+        "GHL_API_KEY": "PEGA_AQUI_TU_API_KEY",
+        "GHL_LOCATION_ID": "PEGA_AQUI_TU_LOCATION_ID",
+        "GHL_BASE_URL": "https://services.leadconnectorhq.com"
+      }
+    },
+    "remi-meta": {
+      "command": "node",
+      "args": [
+        "RUTA_REMI/start.js",
+        "meta"
+      ],
+      "env": {
+        "META_ACCESS_TOKEN": "PEGA_AQUI_EL_ACCESS_TOKEN",
+        "META_AD_ACCOUNT_ID": "act_TU_AD_ACCOUNT_ID"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    }
+  }
+}
